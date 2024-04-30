@@ -2,7 +2,7 @@ import React from 'react';
 import './styles.css';
 import { useState } from 'react';
 import { Wheel } from 'react-custom-roulette';
-import { RouletteForm } from "./RouletteForm";
+import { RouletteForm } from "./components/RouletteForm";
 
 const data = [
   { option: 'hoyoshi', style: { backgroundColor: 'green' } },
@@ -10,45 +10,68 @@ const data = [
   { option: '2' },
 ]
 
+const backgroundColors = ['#ff8f43', '#70bbe0', '#0b3351', '#f9dd50', 'green'];
+const outerBorderColor = '#eeeeee';
+const outerBorderWidth = 10;
+const innerBorderColor = '#30261a';
+const innerBorderWidth = 0;
+const fontFamily = 'Nunito';
+const fontWeight = 'bold';
+const fontSize = 20;
+const fontStyle = 'normal';
+const radiusLineColor = '#eeeeee';
+const radiusLineWidth = 8;
+
 const App = () => {
 
   const [mustSpin, setMustSpin] = useState(false);
-  // const [prizeNumber, setPrizeNumber] = useState(2);
+  const [prizeNumber, setPrizeNumber] = useState(2);
   const [rouletteContents, setRouletteContents] = useState(data);
 
   const handleSpinClick = () => {
     if (!mustSpin) {
+      const newPrizeNumber = Math.floor(Math.random() * rouletteContents.length);
+      setPrizeNumber(newPrizeNumber);
       setMustSpin(true);
     }
   };
 
-  const addRoulette = () => {
-    const addingRoulette = { option: 'hoyoshi' };
-
-    setRouletteContents ( [...rouletteContents, addingRoulette] );
+  const onClickSet = (rouletteContents) => {
+    setRouletteContents (rouletteContents);
   };
 
   return (
   <>
-    <div className="rouletteApp">
-      <div className="rouletteBody">
+    <div className="whole">
+      <div className="rouletteApp">
         <Wheel
           mustStartSpinning={mustSpin}
-          prizeNumber={2}
+          prizeNumber={prizeNumber}
           data={rouletteContents}
-          backgroundColors={['#3e3e3e', '#df3428']}
+          backgroundColors={backgroundColors}
           textColors={['white']}
+          fontFamily={fontFamily}
+          fontSize={fontSize}
+          fontWeight={fontWeight}
+          fontStyle={fontStyle}
+          outerBorderColor={outerBorderColor}
+          outerBorderWidth={outerBorderWidth}
+          innerBorderColor={innerBorderColor}
+          innerBorderWidth={innerBorderWidth}
+          radiusLineColor={radiusLineColor}
+          radiusLineWidth={radiusLineWidth}
+          spinDuration={1.0}
           onStopSpinning={() => {
             setMustSpin(false);
           }}
         />
-      </div>
-      <div className="rouletteButton">
-        <button onClick={handleSpinClick}>SPIN</button>
-        <button onClick={addRoulette}>ADD</button>
+        <button className={'spin-button'} onClick={handleSpinClick}>SPIN</button>
       </div>
       <div className="rouletteForm">
-        <RouletteForm />
+          <RouletteForm
+            rouletteContents={rouletteContents}
+            onClickSet={onClickSet}
+          />
       </div>
     </div>
   </>
